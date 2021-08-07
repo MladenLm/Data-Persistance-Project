@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class MainManager : MonoBehaviour
     private int m_Points;
     
     private bool m_GameOver = false;
+
+    public TextMeshProUGUI display_player_name;
 
     
     // Start is called before the first frame update
@@ -72,5 +75,10 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+    }
+
+    public void Awake()
+    {
+        display_player_name.text = NameInput.nameInput.player_name;
     }
 }

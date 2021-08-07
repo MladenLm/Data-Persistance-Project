@@ -3,30 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class NameInput : MonoBehaviour
 {
-    public Text obj_text;
-    public InputField display;
+    public static NameInput nameInput;
 
-    // Start is called before the first frame update
-    void Start()
+    public TMP_InputField inputField;
+
+    public string player_name;
+
+    private void Awake()
     {
-        
-        obj_text.text = PlayerPrefs.GetString("user_name");
+        if (nameInput == null)
+        {
+            nameInput = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartGame()
     {
-        DontDestroyOnLoad(gameObject);
+        player_name = inputField.text;
+        SceneManager.LoadScene("main");
     }
 
-    public void Create()
+    public void ExitGame()
     {
-        DontDestroyOnLoad(gameObject);
-        obj_text.text = display.text;
-        PlayerPrefs.SetString("user_name", obj_text.text);
-        PlayerPrefs.Save();
+        Application.Quit();
     }
 }
