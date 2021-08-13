@@ -23,7 +23,6 @@ public class MainManager : MonoBehaviour
     public Text loadedName;
 
     
-    
 
     
     // Start is called before the first frame update
@@ -43,6 +42,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        nameOfPlayer = SaveNames.saveNames.userName;
+        nameOfPlayer = PlayerPrefs.GetString(name);
+
     }
 
     private void Update()
@@ -72,6 +75,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
+
     void AddPoint(int point)
     {
         m_Points += point;
@@ -82,5 +86,12 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+    }
+
+    void OnGUI()
+    {
+        
+        //Fetch the PlayerPrefs settings and output them to the screen using Labels
+        GUI.Label(new Rect(50, 50, 200, 30), "Name: " + nameOfPlayer);
     }
 }
