@@ -3,33 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
+
 
 public class NameInput : MonoBehaviour
 {
     public static NameInput nameInput;
 
-    public TMP_InputField inputField;
+    public InputField inputField;
 
-    public string player_name;
+    public string nameOfPlayer;
 
-    private void Awake()
+    public Text inputText;
+    public Text loadedName;
+
+    private void Update()
     {
-        if (nameInput == null)
-        {
-            nameInput = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        else
-        {
-            Destroy(gameObject);
-        }
+        nameOfPlayer = PlayerPrefs.GetString(name);
+        loadedName.text = nameOfPlayer;
     }
+
+
+    public void SetName()
+    {
+        PlayerPrefs.SetString("name", inputText.text);
+        PlayerPrefs.Save();
+    }
+
 
     public void StartGame()
     {
-        player_name = inputField.text;
         SceneManager.LoadScene("main");
     }
 
