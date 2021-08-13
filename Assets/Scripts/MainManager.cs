@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using TMPro;
 
 public class MainManager : MonoBehaviour
 {
@@ -12,22 +11,25 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
-    public Text BestScore;
+    public string playerName;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
-    
     private bool m_GameOver = false;
-    public string nameOfPlayer;
-    public Text loadedName;
-
-    
-
-    
+    public int highScore = 0;
+    public string bestPlayer;
+    public Text BestScore;
+ 
     // Start is called before the first frame update
     void Start()
     {
+        bestPlayer = SaveManger.Instance.bestPlayer;
+        highScore = SaveManger.Instance.highScore;
+        playerName = SaveManger.Instance.playerName;
+        BestScore.text = $"Best Score: {bestPlayer}: {highScore}";
+        ScoreText.text = $"{playerName} Score: 0";
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -42,17 +44,10 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
-
-        nameOfPlayer = SaveNames.saveNames.userName;
-        nameOfPlayer = PlayerPrefs.GetString(name);
-
     }
 
     private void Update()
-    {
-
-        
-
+    { 
         if (!m_Started)
         {
             if (Input.GetKeyDown(KeyCode.Space))
@@ -73,25 +68,33 @@ public class MainManager : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
+
+        
+
     }
 
 
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = $"{playerName} Score : {m_Points}";
+        if (m_Points > highScore)
+        {
+            highScore = m_Points;
+            bestPlayer = playerName;
+        }
     }
 
     public void GameOver()
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        SaveManger.Instance.score = m_Points;
+        SaveManger.Instance.playerName = playerName;
+        SaveManger.Instance.NewHighScore();
+        SaveManger.Instance.SaveScore();
     }
 
-    void OnGUI()
-    {
-        
-        //Fetch the PlayerPrefs settings and output them to the screen using Labels
-        GUI.Label(new Rect(50, 50, 200, 30), "Name: " + nameOfPlayer);
-    }
+   
 }
